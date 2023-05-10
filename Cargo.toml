@@ -6,9 +6,5 @@ edition = "2021"
 [lib]
 path = "src/lib.rs"
 
-[[bin]]
-path = "src/main.rs"
-name = "learn_opengl"
-
 [dependencies]
-glfw = "*"
+glfw = "0.51.0"
