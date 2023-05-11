@@ -8,6 +8,10 @@
 
 `cargo run --bin hello_triangle`
 
+[Hello Triangle Element Buffer Objects]()
+
+`cargo run --bin hello_triangle_ebo`
+
 ## In Progress
 
 [Hello Triangle Exercise 1]()
