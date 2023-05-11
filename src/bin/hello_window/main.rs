@@ -13,6 +13,8 @@ fn main() {
     glfw.window_hint(glfw::WindowHint::OpenGlProfile(
         glfw::OpenGlProfileHint::Core,
     ));
+    #[cfg(target_os = "macos")]
+    glfw.window_hint(glfw::WindowHint::OpenGlForwardCompat(true));
 
     // glfw window creation
     // --------------------
@@ -26,7 +28,8 @@ fn main() {
         .expect("failed to create GLFW window");
 
     window.make_current();
-    let mut gl = gl::load(|e| glfw.get_proc_address_raw(e) as *const std::os::raw::c_void);
+    let mut gl =
+        gl::load(|symbol| glfw.get_proc_address_raw(symbol) as *const std::os::raw::c_void);
 
     set_viewport_size(
         &mut gl,
@@ -38,8 +41,8 @@ fn main() {
     // render loop
     // -----------
     while !window.should_close() {
-        // input events
-        // ------------
+        // input
+        // -----
         process_input(&mut window);
 
         // render
