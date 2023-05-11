@@ -22,7 +22,8 @@ const FRAGMENT_SHADER_SOURCE: &str = r#"
 out vec4 FragColor;
 void main()
 {
-    FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);
+    // Hex #ff8033, RBGA 0-255 rgba(255, 128, 51, 1)
+    FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f); // RGBA 0-1
 }
 "#;
 
@@ -150,8 +151,10 @@ fn main() {
         gl.GenVertexArrays(1, &mut vao);
         gl.GenBuffers(1, &mut vbo);
         // bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).
+        // bind the Vertex Array Object
         gl.BindVertexArray(vao);
 
+        // copy our vertices array into a buffer for OpenGL to use
         gl.BindBuffer(gl::ARRAY_BUFFER, vbo);
         gl.BufferData(
             gl::ARRAY_BUFFER,
@@ -159,7 +162,7 @@ fn main() {
             vertices.as_ptr() as *const GLvoid,
             gl::STATIC_DRAW,
         );
-
+        // set the vertex attributes pointers
         gl.VertexAttribPointer(
             0,
             3,
@@ -203,8 +206,12 @@ fn main() {
 
         // draw our first triangle
         unsafe {
+            // use our shader program when we want to render an object
             gl.UseProgram(shader_program);
+            // Core OpenGL requires that we use a VAO so it knows what to do with our vertex inputs.
+            // If we fail to bind a VAO, OpenGL will most likely refuse to draw anything.
             gl.BindVertexArray(vao);
+            // draw the object
             gl.DrawArrays(gl::TRIANGLES, 0, 3);
         }
 
