@@ -1,3 +1,8 @@
+/*
+    Hello Window
+    https://learnopengl.com/Getting-started/Hello-Window
+*/
+
 extern crate glfw;
 use glfw::{Action, Context, Key, Window};
 use learn_opengl::glad::gl33 as gl;

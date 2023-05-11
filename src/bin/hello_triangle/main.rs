@@ -1,3 +1,8 @@
+/*
+    Hello Triangle
+    https://learnopengl.com/Getting-started/Hello-Triangle
+*/
+
 extern crate glfw;
 use glfw::{Action, Context, Key, Window};
 use learn_opengl::glad::gl33::{self as gl, types::*};
