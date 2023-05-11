@@ -1,10 +1,3 @@
-[package]
+[workspace]
 name = "learn_opengl"
-version = "0.1.0"
-edition = "2021"
-
-[lib]
-path = "src/lib.rs"
-
-[dependencies]
-glfw = "0.51.0"
+members = ["glad", "getting_started"]

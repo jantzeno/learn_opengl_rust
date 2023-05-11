@@ -1,13 +1,13 @@
 /*
     Hello Triangle
     https://learnopengl.com/Getting-started/Hello-Triangle
-    Exercise 1
-    Adjust the vertex shader so that the triangle is upside down
+    Exercise 2
+    Specify a horizontal offset via a uniform and move the triangle to the right side of the screen in the vertex shader using this offset value.
 */
 
 extern crate glfw;
+use glad::gl33::{self as gl, types::*};
 use glfw::{Action, Context, Key, Window};
-use learn_opengl::glad::gl33::{self as gl, types::*};
 use std::ffi::{CStr, CString};
 use std::{ptr, str};
 
@@ -69,7 +69,7 @@ fn main() {
         SCR_HEIGHT.try_into().unwrap(),
     );
 
-    let (shader_program, vao) = unsafe {
+    let (shader_program, vao_arr) = unsafe {
         // build and compile our shader program
         // ------------------------------------
         // vertex shader
@@ -146,34 +146,50 @@ fn main() {
 
         // set up vertex data (and buffer(s)) and configure vertex attributes
         // ------------------------------------------------------------------
-        let vertices: [f32; 18] = [
-            // Left Triangle
+        let left_triangle: [f32; 9] = [
             -1.0, -0.5, 0.0, // left
             0.0, -0.5, 0.0, // right
             -0.5, 0.5, 0.0, // top
-            // Right Triangle
+        ];
+
+        let right_triangle: [f32; 9] = [
             0.0, -0.5, 0.0, // left
             1.0, -0.5, 0.0, // right
             0.5, 0.5, 0.0, // top
         ];
 
-        let mut vbo = 0;
-        let mut vao = 0;
-        gl.GenVertexArrays(1, &mut vao);
-        gl.GenBuffers(1, &mut vbo);
-        // bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).
-        // bind the Vertex Array Object
-        gl.BindVertexArray(vao);
-
-        // copy our vertices array into a buffer for OpenGL to use
-        gl.BindBuffer(gl::ARRAY_BUFFER, vbo);
+        let mut vbo_arr: [u32; 2] = [0; 2];
+        let mut vao_arr: [u32; 2] = [0; 2];
+        gl.GenVertexArrays(2, vao_arr.as_mut_ptr());
+        gl.GenBuffers(2, vbo_arr.as_mut_ptr());
+        // copy left triangle vertices array into a buffer for OpenGL to use
+        gl.BindVertexArray(vao_arr[0]);
+        gl.BindBuffer(gl::ARRAY_BUFFER, vbo_arr[0]);
         gl.BufferData(
             gl::ARRAY_BUFFER,
-            (vertices.len() * std::mem::size_of::<GLfloat>()) as GLsizeiptr,
-            vertices.as_ptr() as *const GLvoid,
+            (left_triangle.len() * std::mem::size_of::<GLfloat>()) as GLsizeiptr,
+            left_triangle.as_ptr() as *const GLvoid,
             gl::STATIC_DRAW,
         );
-        // set the vertex attributes pointers
+        gl.VertexAttribPointer(
+            0,
+            3,
+            gl::FLOAT,
+            gl::FALSE,
+            3 * std::mem::size_of::<GLfloat>() as GLsizei,
+            ptr::null(),
+        );
+        gl.EnableVertexAttribArray(0);
+
+        // copy right triangle vertices array into a buffer for OpenGL to use
+        gl.BindVertexArray(vao_arr[1]);
+        gl.BindBuffer(gl::ARRAY_BUFFER, vbo_arr[1]);
+        gl.BufferData(
+            gl::ARRAY_BUFFER,
+            (right_triangle.len() * std::mem::size_of::<GLfloat>()) as GLsizeiptr,
+            right_triangle.as_ptr() as *const GLvoid,
+            gl::STATIC_DRAW,
+        );
         gl.VertexAttribPointer(
             0,
             3,
@@ -196,9 +212,9 @@ fn main() {
 
         // optional: de-allocate all resources once they've outlived their purpose:
         // ------------------------------------------------------------------------
-        gl.DeleteBuffers(1, &vbo);
+        gl.DeleteBuffers(2, vbo_arr.as_ptr());
 
-        (shader_program, vao)
+        (shader_program, vao_arr)
     };
 
     // render loop
@@ -217,12 +233,13 @@ fn main() {
             // draw our first triangle
             // use our shader program when we want to render an object
             gl.UseProgram(shader_program);
-            // Core OpenGL requires that we use a VAO so it knows what to do with our vertex inputs.
-            // If we fail to bind a VAO, OpenGL will most likely refuse to draw anything.
-            gl.BindVertexArray(vao);
-            // draw the object
-            // count 6, since there are 6 vertices, two triangles
-            gl.DrawArrays(gl::TRIANGLES, 0, 6);
+            // draw our left triangle
+            gl.BindVertexArray(vao_arr[0]);
+            gl.DrawArrays(gl::TRIANGLES, 0, 3);
+
+            // draw our right triangle
+            gl.BindVertexArray(vao_arr[1]);
+            gl.DrawArrays(gl::TRIANGLES, 0, 3);
         }
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
@@ -233,7 +250,7 @@ fn main() {
     // optional: de-allocate all resources once they've outlived their purpose:
     // ------------------------------------------------------------------------
     unsafe {
-        gl.DeleteVertexArrays(1, &vao);
+        gl.DeleteVertexArrays(2, vao_arr.as_ptr());
         gl.DeleteProgram(shader_program);
     }
 

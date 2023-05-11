@@ -4,8 +4,8 @@
 */
 
 extern crate glfw;
+use glad::gl33 as gl;
 use glfw::{Action, Context, Key, Window};
-use learn_opengl::glad::gl33 as gl;
 
 const SCR_WIDTH: u32 = 800;
 const SCR_HEIGHT: u32 = 600;

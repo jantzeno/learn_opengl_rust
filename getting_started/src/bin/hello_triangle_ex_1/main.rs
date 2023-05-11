@@ -1,11 +1,13 @@
 /*
-    Hello Triangle - Element Buffer Objects Section
+    Hello Triangle
     https://learnopengl.com/Getting-started/Hello-Triangle
+    Exercise 1
+    Adjust the vertex shader so that the triangle is upside down
 */
 
 extern crate glfw;
+use glad::gl33::{self as gl, types::*};
 use glfw::{Action, Context, Key, Window};
-use learn_opengl::glad::gl33::{self as gl, types::*};
 use std::ffi::{CStr, CString};
 use std::{ptr, str};
 
@@ -144,24 +146,21 @@ fn main() {
 
         // set up vertex data (and buffer(s)) and configure vertex attributes
         // ------------------------------------------------------------------
-        let vertices: [f32; 12] = [
-            0.5, 0.5, 0.0, // top right
-            0.5, -0.5, 0.0, // bottom right
-            -0.5, -0.5, 0.0, // bottom left
-            -0.5, 0.5, 0.0, // top left
-        ];
-
-        let indices: [u32; 6] = [
-            0, 1, 3, // first triangle
-            1, 2, 3, // second triangle
+        let vertices: [f32; 18] = [
+            // Left Triangle
+            -1.0, -0.5, 0.0, // left
+            0.0, -0.5, 0.0, // right
+            -0.5, 0.5, 0.0, // top
+            // Right Triangle
+            0.0, -0.5, 0.0, // left
+            1.0, -0.5, 0.0, // right
+            0.5, 0.5, 0.0, // top
         ];
 
         let mut vbo = 0;
-        let mut ebo = 0;
         let mut vao = 0;
         gl.GenVertexArrays(1, &mut vao);
         gl.GenBuffers(1, &mut vbo);
-        gl.GenBuffers(1, &mut ebo);
         // bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).
         // bind the Vertex Array Object
         gl.BindVertexArray(vao);
@@ -172,14 +171,6 @@ fn main() {
             gl::ARRAY_BUFFER,
             (vertices.len() * std::mem::size_of::<GLfloat>()) as GLsizeiptr,
             vertices.as_ptr() as *const GLvoid,
-            gl::STATIC_DRAW,
-        );
-
-        gl.BindBuffer(gl::ELEMENT_ARRAY_BUFFER, ebo);
-        gl.BufferData(
-            gl::ELEMENT_ARRAY_BUFFER,
-            (indices.len() * std::mem::size_of::<GLfloat>()) as GLsizeiptr,
-            indices.as_ptr() as *const GLvoid,
             gl::STATIC_DRAW,
         );
         // set the vertex attributes pointers
@@ -195,12 +186,6 @@ fn main() {
 
         // note that this is allowed, the call to glVertexAttribPointer registered VBO as the vertex attribute's bound vertex buffer object so afterwards we can safely unbind
         gl.BindBuffer(gl::ARRAY_BUFFER, 0);
-        gl.DrawElements(
-            gl::TRIANGLES,
-            indices.len().try_into().unwrap(),
-            gl::UNSIGNED_INT,
-            ptr::null(),
-        );
 
         // You can unbind the VAO afterwards so other VAO calls won't accidentally modify this VAO, but this rarely happens. Modifying other
         // VAOs requires a call to glBindVertexArray anyways so we generally don't unbind VAOs (nor VBOs) when it's not directly necessary.
@@ -211,7 +196,7 @@ fn main() {
 
         // optional: de-allocate all resources once they've outlived their purpose:
         // ------------------------------------------------------------------------
-        gl.DeleteBuffers(1, &ebo);
+        gl.DeleteBuffers(1, &vbo);
 
         (shader_program, vao)
     };
@@ -236,7 +221,8 @@ fn main() {
             // If we fail to bind a VAO, OpenGL will most likely refuse to draw anything.
             gl.BindVertexArray(vao);
             // draw the object
-            gl.DrawElements(gl::TRIANGLES, 6, gl::UNSIGNED_INT, ptr::null());
+            // count 6, since there are 6 vertices, two triangles
+            gl.DrawArrays(gl::TRIANGLES, 0, 6);
         }
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)

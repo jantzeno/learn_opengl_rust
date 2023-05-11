@@ -4,8 +4,8 @@
 */
 
 extern crate glfw;
+use glad::gl33::{self as gl, types::*};
 use glfw::{Action, Context, Key, Window};
-use learn_opengl::glad::gl33::{self as gl, types::*};
 use std::ffi::{CStr, CString};
 use std::{ptr, str};
 
