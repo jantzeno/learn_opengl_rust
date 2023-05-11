@@ -1,6 +1,8 @@
 /*
     Hello Triangle
     https://learnopengl.com/Getting-started/Hello-Triangle
+    Exercise 1
+    Adjust the vertex shader so that the triangle is upside down
 */
 
 extern crate glfw;
@@ -144,10 +146,15 @@ fn main() {
 
         // set up vertex data (and buffer(s)) and configure vertex attributes
         // ------------------------------------------------------------------
-        let vertices: [f32; 9] = [
-            -0.5, -0.5, 0.0, // left
-            0.5, -0.5, 0.0, // right
-            0.0, 0.5, 0.0, // top
+        let vertices: [f32; 18] = [
+            // Left Triangle
+            -1.0, -0.5, 0.0, // left
+            0.0, -0.5, 0.0, // right
+            -0.5, 0.5, 0.0, // top
+            // Right Triangle
+            0.0, -0.5, 0.0, // left
+            1.0, -0.5, 0.0, // right
+            0.5, 0.5, 0.0, // top
         ];
 
         let mut vbo = 0;
@@ -214,8 +221,8 @@ fn main() {
             // If we fail to bind a VAO, OpenGL will most likely refuse to draw anything.
             gl.BindVertexArray(vao);
             // draw the object
-            // count 3, since there are 3 vertices, one triangle
-            gl.DrawArrays(gl::TRIANGLES, 0, 3);
+            // count 6, since there are 6 vertices, two triangles
+            gl.DrawArrays(gl::TRIANGLES, 0, 6);
         }
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)

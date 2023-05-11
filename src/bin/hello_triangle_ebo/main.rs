@@ -6,9 +6,8 @@
 extern crate glfw;
 use glfw::{Action, Context, Key, Window};
 use learn_opengl::glad::gl33::{self as gl, types::*};
-use std::ffi::CString;
-use std::ptr;
-use std::str;
+use std::ffi::{CStr, CString};
+use std::{ptr, str};
 
 const SCR_WIDTH: u32 = 800;
 const SCR_HEIGHT: u32 = 600;
@@ -92,7 +91,7 @@ fn main() {
             );
             println!(
                 "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n{}",
-                str::from_utf8(&info_log).unwrap()
+                CStr::from_ptr(info_log.as_ptr()).to_string_lossy(),
             );
         };
 
@@ -114,7 +113,7 @@ fn main() {
             );
             println!(
                 "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n{}",
-                str::from_utf8(&info_log).unwrap()
+                CStr::from_ptr(info_log.as_ptr()).to_string_lossy(),
             );
         };
 
@@ -135,7 +134,7 @@ fn main() {
             );
             println!(
                 "ERROR::SHADER::PROGRAM::COMPILATION_FAILED\n{}",
-                str::from_utf8(&info_log).unwrap()
+                CStr::from_ptr(info_log.as_ptr()).to_string_lossy(),
             );
         };
 
@@ -229,10 +228,8 @@ fn main() {
         unsafe {
             gl.ClearColor(0.2, 0.3, 0.3, 1.0);
             gl.Clear(gl::COLOR_BUFFER_BIT);
-        }
 
-        // draw our first triangle
-        unsafe {
+            // draw our first triangle
             // use our shader program when we want to render an object
             gl.UseProgram(shader_program);
             // Core OpenGL requires that we use a VAO so it knows what to do with our vertex inputs.
