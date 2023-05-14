@@ -36,7 +36,7 @@ fn main() {
     );
 
     let (our_shader, vao) = unsafe {
-        let shader = ShaderBuilder::new().build(
+        let shader = ShaderBuilder::default().build(
             &mut window.gl,
             "getting_started/src/bin/shaders_class/shader.vs",
             "getting_started/src/bin/shaders_class/shader.fs",

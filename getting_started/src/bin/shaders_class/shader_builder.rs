@@ -3,20 +3,17 @@ use core::ffi::CStr;
 use glad::gl33::{self as gl, types::*};
 use std::{
     ffi::CString,
-    fs::File,
-    io::{self, Read},
+    fs::{self},
+    io::{self},
     ptr,
 };
 
+#[derive(Default)]
 pub struct ShaderBuilder {
     id: gl::types::GLuint,
 }
 
 impl ShaderBuilder {
-    pub fn new() -> ShaderBuilder {
-        ShaderBuilder { id: 0 }
-    }
-
     pub fn build(&mut self, gl: &mut gl::Gl, vertex_path: &str, fragment_path: &str) -> Shader {
         match self.new_shader(gl, vertex_path, fragment_path) {
             Ok(_) => Shader { id: self.id },
@@ -33,26 +30,12 @@ impl ShaderBuilder {
         fragment_path: &str,
     ) -> Result<(), io::Error> {
         // get vertex source file
-        let mut vertex_code = String::new();
-        let mut file = File::open(vertex_path)
-            .expect(&format!("failed to open vertex shader: {}", vertex_path));
-        file.read_to_string(&mut vertex_code)
-            .expect(&format!("failed to read vertex shader: {}", vertex_path));
-
+        let vertex_code = fs::read_to_string(vertex_path)?;
         let vertex_cstring = CString::new(vertex_code)?;
         let vertex_ptr = vertex_cstring.as_ptr();
 
         // get fragment source file
-        let mut fragment_code = String::new();
-        file = File::open(fragment_path).expect(&format!(
-            "failed to open fragment shader: {}",
-            fragment_path
-        ));
-        file.read_to_string(&mut fragment_code).expect(&format!(
-            "failed to read fragment shader: {}",
-            fragment_path
-        ));
-
+        let fragment_code = fs::read_to_string(fragment_path)?;
         let fragment_cstring = CString::new(fragment_code)?;
         let fragment_ptr = fragment_cstring.as_ptr();
 
