@@ -11,7 +11,7 @@ use glad::gl33::{self as gl, types::*};
 use glfw::{Action, Context, Key};
 use shader::Shader;
 use shader_builder::ShaderBuilder;
-use std::ptr;
+use std::{ffi::CStr, ptr};
 
 const SCR_WIDTH: u32 = 800;
 const SCR_HEIGHT: u32 = 600;
@@ -168,6 +168,14 @@ fn draw(window: &mut Window, vao: u32, shader: &Shader) {
 
         // activate the shader
         shader.use_program(&mut window.gl);
+
+        // Exercise 2
+        // add offset to x position
+        shader.set_float(
+            &mut window.gl,
+            CStr::from_bytes_with_nul(b"xOffset\0").unwrap(),
+            0.5,
+        );
 
         // render the triangle
         window.gl.BindVertexArray(vao);
