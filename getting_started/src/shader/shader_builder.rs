@@ -1,4 +1,4 @@
-use crate::shader::Shader;
+use crate::shader::shader::Shader;
 use core::ffi::CStr;
 use glad::gl33::{self as gl, types::*};
 use std::{

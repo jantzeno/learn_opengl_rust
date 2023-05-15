@@ -3,14 +3,11 @@
     https://learnopengl.com/Getting-started/Shaders
 */
 
-pub mod shader;
-pub mod shader_builder;
-
 extern crate glfw;
+use getting_started::shader::Shader;
+use getting_started::shader::ShaderBuilder;
 use glad::gl33::{self as gl, types::*};
 use glfw::{Action, Context, Key};
-use shader::Shader;
-use shader_builder::ShaderBuilder;
 use std::{ffi::CStr, ptr};
 
 const SCR_WIDTH: u32 = 800;
