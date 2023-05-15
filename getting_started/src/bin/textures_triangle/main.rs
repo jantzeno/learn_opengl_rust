@@ -64,7 +64,7 @@ fn main() {
         _glfw: glfw,
     };
 
-    let (our_shader, vao, texture) = unsafe {
+    let (our_shader, vbo, vao, texture) = unsafe {
         // build and compile our shader program
         // ------------------------------------
         let shader = ShaderBuilder::default().build(
@@ -76,7 +76,7 @@ fn main() {
         // set up vertex data (and buffer(s)) and configure vertex attributes
         // ------------------------------------------------------------------
         let vertices: [f32; 24] = [
-            // positions     // colors
+            // positions     // colors      // texture coords
             0.5, -0.5, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, // bottom right, red
             -0.5, -0.5, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, // bottom left, green
             0.0, 0.5, 0.0, 0.0, 0.0, 1.0, 0.5, 1.0, // top, blue
@@ -92,13 +92,13 @@ fn main() {
 
         // copy our vertices array into a buffer for OpenGL to use
         window.gl.BindBuffer(gl::ARRAY_BUFFER, vbo);
-        let stride = (8 * std::mem::size_of::<GLfloat>()) as GLsizei;
         window.gl.BufferData(
             gl::ARRAY_BUFFER,
             (vertices.len() * std::mem::size_of::<GLfloat>()) as GLsizeiptr,
             vertices.as_ptr() as *const GLvoid,
             gl::STATIC_DRAW,
         );
+        let stride = (8 * std::mem::size_of::<GLfloat>()) as GLsizei;
         // position attribute
         window
             .gl
@@ -176,9 +176,8 @@ fn main() {
 
         // optional: de-allocate all resources once they've outlived their purpose:
         // ------------------------------------------------------------------------
-        // gl.DeleteBuffers(1, &vbo);
 
-        (shader, vao, texture)
+        (shader, vbo, vao, texture)
     };
 
     // render loop
@@ -212,6 +211,7 @@ fn main() {
     // ------------------------------------------------------------------------
     unsafe {
         window.gl.DeleteVertexArrays(1, &vao);
+        window.gl.DeleteBuffers(1, &vbo);
         window.gl.DeleteProgram(our_shader.id);
     }
 

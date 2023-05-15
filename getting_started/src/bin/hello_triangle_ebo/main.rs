@@ -67,7 +67,7 @@ fn main() {
         SCR_HEIGHT.try_into().unwrap(),
     );
 
-    let (shader_program, vao) = unsafe {
+    let (shader_program, vbo, vao, ebo) = unsafe {
         // build and compile our shader program
         // ------------------------------------
         // vertex shader
@@ -209,11 +209,7 @@ fn main() {
         // uncomment this call to draw in wireframe polygons.
         // gl.PolygonMode(gl::FRONT_AND_BACK, gl::LINE);
 
-        // optional: de-allocate all resources once they've outlived their purpose:
-        // ------------------------------------------------------------------------
-        gl.DeleteBuffers(1, &ebo);
-
-        (shader_program, vao)
+        (shader_program, vbo, vao, ebo)
     };
 
     // render loop
@@ -248,6 +244,8 @@ fn main() {
     // ------------------------------------------------------------------------
     unsafe {
         gl.DeleteVertexArrays(1, &vao);
+        gl.DeleteBuffers(1, &vbo);
+        gl.DeleteBuffers(1, &ebo);
         gl.DeleteProgram(shader_program);
     }
 
