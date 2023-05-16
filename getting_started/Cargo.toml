@@ -10,3 +10,7 @@ image = "0.24"
 [dependencies.glad]
 path = "../glad"
 version = "*"
+
+[dependencies.common]
+path = "../common"
+version = "*"

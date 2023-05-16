@@ -6,7 +6,7 @@
 extern crate glfw;
 extern crate image;
 
-use getting_started::shader::ShaderBuilder;
+use common::shader::ShaderBuilder;
 use glad::gl33::{self as gl, types::*};
 use glfw::{Action, Context, Key};
 use image::GenericImageView;

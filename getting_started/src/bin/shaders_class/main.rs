@@ -4,8 +4,8 @@
 */
 
 extern crate glfw;
-use getting_started::shader::Shader;
-use getting_started::shader::ShaderBuilder;
+use common::shader::Shader;
+use common::shader::ShaderBuilder;
 use glad::gl33::{self as gl, types::*};
 use glfw::{Action, Context, Key};
 use std::{ffi::CStr, ptr};
