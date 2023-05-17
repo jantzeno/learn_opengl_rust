@@ -327,6 +327,11 @@ fn set_viewport_size(gl: &mut gl::Gl, width: i32, height: i32) {
     unsafe { gl.Viewport(0, 0, width, height) };
 }
 
+// combine two vectors into a single array of vertices according to a step size
+// Example:
+//   gen_vertices(vec![1.0, 2.0, 3.0, 4.0, 5.0], vec![9.0, 8.0, 7.0, 6.0, 5.0], 2, 2)
+//   => vec![1.0, 2.0, 9.0, 8.0, 3.0, 4.0, 7.0, 6.0, 5.0, 5.0]
+// -------------------------------------------------------------------------------------------------
 fn gen_vertices(lhs: Vec<f32>, rhs: Vec<f32>, lhs_step: usize, rhs_step: usize) -> Vec<f32> {
     let mut vertices: Vec<f32> = vec![];
     for i in 0..lhs.len() / lhs_step {
