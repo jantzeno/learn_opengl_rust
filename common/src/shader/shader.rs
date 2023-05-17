@@ -28,4 +28,61 @@ impl Shader {
             gl.Uniform1f(gl.GetUniformLocation(self.id, name.as_ptr()), value);
         }
     }
+    pub fn set_vec2(&self, gl: &mut gl::Gl, name: &CStr, value: [f32; 2]) {
+        unsafe {
+            gl.Uniform2fv(
+                gl.GetUniformLocation(self.id, name.as_ptr()),
+                1,
+                value.as_ptr(),
+            );
+        }
+    }
+    pub fn sec_vec3(&self, gl: &mut gl::Gl, name: &CStr, value: [f32; 3]) {
+        unsafe {
+            gl.Uniform3fv(
+                gl.GetUniformLocation(self.id, name.as_ptr()),
+                1,
+                value.as_ptr(),
+            );
+        }
+    }
+    pub fn set_vec4(&self, gl: &mut gl::Gl, name: &CStr, value: [f32; 4]) {
+        unsafe {
+            gl.Uniform4fv(
+                gl.GetUniformLocation(self.id, name.as_ptr()),
+                1,
+                value.as_ptr(),
+            );
+        }
+    }
+    pub fn set_mat2(&self, gl: &mut gl::Gl, name: &CStr, mat: [[f32; 2]; 2]) {
+        unsafe {
+            gl.UniformMatrix2fv(
+                gl.GetUniformLocation(self.id, name.as_ptr()),
+                1,
+                gl::FALSE,
+                mat[0].as_ptr(),
+            )
+        }
+    }
+    pub fn set_mat3(&self, gl: &mut gl::Gl, name: &CStr, mat: [[f32; 3]; 3]) {
+        unsafe {
+            gl.UniformMatrix2fv(
+                gl.GetUniformLocation(self.id, name.as_ptr()),
+                1,
+                gl::FALSE,
+                mat[0].as_ptr(),
+            )
+        }
+    }
+    pub fn set_mat4(&self, gl: &mut gl::Gl, name: &CStr, mat: [[f32; 4]; 4]) {
+        unsafe {
+            gl.UniformMatrix2fv(
+                gl.GetUniformLocation(self.id, name.as_ptr()),
+                1,
+                gl::FALSE,
+                mat[0].as_ptr(),
+            )
+        }
+    }
 }
